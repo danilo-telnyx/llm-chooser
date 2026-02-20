@@ -22,6 +22,7 @@ export default {
       if (path === '/admin/login' && request.method === 'POST') return await handleLogin(request, env);
       if (path === '/admin/verify' && request.method === 'POST') return await handleVerify(request, env);
       if (path === '/api/stats' && request.method === 'GET') return await handleStats(request, env, url);
+      if (path === '/admin/change-password' && request.method === 'POST') return await handleChangePassword(request, env);
       return new Response('Not Found', { status: 404 });
     } catch (e) {
       return jsonResponse({ error: e.message }, 500);
@@ -92,9 +93,18 @@ async function handleTrack(request, env) {
 
 // ── Auth ──
 
+async function getPassword(env) {
+  try {
+    const row = await env.DB.prepare("SELECT value FROM settings WHERE key = 'admin_password'").first();
+    if (row && row.value) return row.value;
+  } catch {}
+  return env.ADMIN_PASSWORD;
+}
+
 async function handleLogin(request, env) {
   const { password } = await request.json();
-  if (!password || password !== env.ADMIN_PASSWORD) {
+  const currentPw = await getPassword(env);
+  if (!password || password !== currentPw) {
     return jsonResponse({ error: 'Invalid password' }, 401);
   }
 
@@ -124,6 +134,32 @@ async function handleVerify(request, env) {
   await env.DB.prepare('UPDATE auth_codes SET used = 1 WHERE id = ?').bind(row.id).run();
   const token = await createJWT(env);
   return jsonResponse({ ok: true, token });
+}
+
+// ── Change Password ──
+
+async function handleChangePassword(request, env) {
+  const auth = request.headers.get('Authorization');
+  if (!auth || !await verifyJWT(auth.replace('Bearer ', ''), env)) {
+    return jsonResponse({ error: 'Unauthorized' }, 401);
+  }
+  const { currentPassword, newPassword } = await request.json();
+  const currentPw = await getPassword(env);
+  if (!currentPassword || currentPassword !== currentPw) {
+    return jsonResponse({ error: 'Current password is incorrect' }, 401);
+  }
+  if (!newPassword || newPassword.length < 8) {
+    return jsonResponse({ error: 'New password must be at least 8 characters' }, 400);
+  }
+  // Note: Cloudflare Worker secrets can't be changed at runtime via the API from within the worker itself.
+  // We store the new password in D1 as an override. Check D1 first, then fall back to env.
+  await env.DB.prepare(
+    `CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT)`
+  ).run();
+  await env.DB.prepare(
+    `INSERT OR REPLACE INTO settings (key, value) VALUES ('admin_password', ?)`
+  ).bind(newPassword).run();
+  return jsonResponse({ ok: true, message: 'Password changed successfully' });
 }
 
 // ── Stats ──
@@ -204,7 +240,7 @@ function serveAdminDashboard() {
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 a{color:var(--accent);text-decoration:none}
 .container{max-width:1200px;margin:0 auto;padding:20px}
-header{background:var(--bg2);border-bottom:1px solid var(--border);padding:20px 0;text-align:center}
+header{background:var(--bg2);border-bottom:1px solid var(--border);padding:20px 0;text-align:center;position:relative}
 header h1{font-size:1.6em}
 header p{color:var(--text2);font-size:0.9em;margin-top:4px}
 
@@ -250,7 +286,27 @@ header p{color:var(--text2);font-size:0.9em;margin-top:4px}
 <header>
   <h1>🤖 LLM Chooser Analytics</h1>
   <p>Serverless analytics powered by Cloudflare Workers + D1</p>
+  <div id="header-actions" style="display:none;position:absolute;right:20px;top:16px">
+    <button onclick="showProfile()" style="background:var(--bg3);color:var(--text);border:1px solid var(--border);padding:6px 14px;border-radius:6px;cursor:pointer;margin-right:8px;font-size:0.85em">⚙️ Profile</button>
+    <button onclick="doLogout()" style="background:var(--red);color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:0.85em">🚪 Logout</button>
+  </div>
 </header>
+
+<!-- Profile Modal -->
+<div id="profile-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;justify-content:center;align-items:center">
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:32px;width:100%;max-width:420px">
+    <h2 style="margin-bottom:20px;font-size:1.2em">⚙️ Profile Settings</h2>
+    <h3 style="font-size:0.95em;color:var(--text2);margin-bottom:12px">Change Password</h3>
+    <input type="password" id="current-pw" placeholder="Current password" style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.95em;margin-bottom:10px;outline:none">
+    <input type="password" id="new-pw" placeholder="New password (min 8 chars)" style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.95em;margin-bottom:10px;outline:none">
+    <input type="password" id="confirm-pw" placeholder="Confirm new password" style="width:100%;padding:10px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:0.95em;margin-bottom:14px;outline:none">
+    <div style="display:flex;gap:10px">
+      <button onclick="doChangePassword()" style="flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;font-weight:600">Save Password</button>
+      <button onclick="hideProfile()" style="flex:1;padding:10px;background:var(--bg3);color:var(--text);border:1px solid var(--border);border-radius:8px;cursor:pointer">Cancel</button>
+    </div>
+    <div id="pw-msg" style="font-size:0.85em;margin-top:10px;text-align:center"></div>
+  </div>
+</div>
 
 <div id="login-view">
   <div class="login-card">
@@ -329,6 +385,7 @@ async function doVerify() {
   TOKEN = d.token;
   document.getElementById('login-view').style.display = 'none';
   document.getElementById('dashboard-view').style.display = 'block';
+  document.getElementById('header-actions').style.display = 'block';
   loadStats('all');
 }
 
@@ -378,6 +435,49 @@ function makePie(id, data) {
 }
 
 function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+function doLogout() {
+  TOKEN = '';
+  document.getElementById('dashboard-view').style.display = 'none';
+  document.getElementById('header-actions').style.display = 'none';
+  document.getElementById('login-view').style.display = 'flex';
+  document.getElementById('step1').style.display = 'block';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('password').value = '';
+  document.getElementById('code').value = '';
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('verify-error').textContent = '';
+}
+
+function showProfile() {
+  document.getElementById('profile-modal').style.display = 'flex';
+  document.getElementById('current-pw').value = '';
+  document.getElementById('new-pw').value = '';
+  document.getElementById('confirm-pw').value = '';
+  document.getElementById('pw-msg').textContent = '';
+}
+
+function hideProfile() {
+  document.getElementById('profile-modal').style.display = 'none';
+}
+
+async function doChangePassword() {
+  const msg = document.getElementById('pw-msg');
+  const cur = document.getElementById('current-pw').value;
+  const np = document.getElementById('new-pw').value;
+  const cp = document.getElementById('confirm-pw').value;
+  if (!cur || !np) { msg.style.color='var(--red)'; msg.textContent='All fields required'; return; }
+  if (np !== cp) { msg.style.color='var(--red)'; msg.textContent='Passwords do not match'; return; }
+  if (np.length < 8) { msg.style.color='var(--red)'; msg.textContent='Min 8 characters'; return; }
+  const r = await fetch(BASE+'/admin/change-password', {
+    method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN},
+    body:JSON.stringify({currentPassword:cur, newPassword:np})
+  });
+  const d = await r.json();
+  if (!r.ok) { msg.style.color='var(--red)'; msg.textContent=d.error; return; }
+  msg.style.color='var(--green)'; msg.textContent='✅ Password changed!';
+  setTimeout(hideProfile, 1500);
+}
 
 document.getElementById('password').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
 document.getElementById('code').addEventListener('keydown', e => { if (e.key==='Enter') doVerify(); });
