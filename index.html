@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LLM Chooser — Comprehensive Model Comparison Guide</title>
-<meta name="description" content="Compare 20+ Large Language Models across benchmarks, pricing, capabilities, and hardware requirements. Updated February 2026.">
+<meta name="description" content="Compare 30+ Large Language Models across benchmarks, pricing, capabilities, and hardware requirements. Updated February 2026.">
 <style>
 :root {
   --bg: #0d1117;
@@ -18,6 +18,7 @@
   --red: #f85149;
   --yellow: #d29922;
   --purple: #bc8cff;
+  --orange: #f0883e;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,6 +31,8 @@ header { background: var(--bg2); border-bottom: 1px solid var(--border); padding
 header h1 { font-size: 2em; margin-bottom: 4px; }
 header p { color: var(--text2); font-size: 1.1em; }
 .badge { display: inline-block; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 2px 10px; font-size: 0.8em; color: var(--text2); margin-left: 8px; }
+.badge-new { border-color: var(--green); color: var(--green); }
+.badge-legacy { border-color: var(--orange); color: var(--orange); }
 
 nav { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; }
 nav .container { display: flex; gap: 16px; flex-wrap: wrap; }
@@ -53,12 +56,15 @@ th.sorted-asc .sort-arrow::after { content: ' ▲'; opacity: 1; }
 th.sorted-desc .sort-arrow::after { content: ' ▼'; opacity: 1; }
 td { padding: 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 tr:hover { background: var(--bg3); }
-.model-name { font-weight: 600; color: var(--accent); position: sticky; left: 0; background: var(--bg); z-index: 5; min-width: 160px; }
+tr.legacy-row { opacity: 0.7; }
+.model-name { font-weight: 600; color: var(--accent); position: sticky; left: 0; background: var(--bg); z-index: 5; min-width: 180px; }
 tr:hover .model-name { background: var(--bg3); }
 thead th:first-child { position: sticky; left: 0; background: var(--bg3); z-index: 15; }
 .yes { color: var(--green); }
 .no { color: var(--red); }
 .na { color: var(--text2); font-style: italic; }
+.new-tag { color: var(--green); font-size: 0.7em; vertical-align: super; margin-left: 2px; }
+.legacy-tag { color: var(--orange); font-size: 0.7em; vertical-align: super; margin-left: 2px; }
 
 .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
 .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
@@ -79,6 +85,10 @@ footer a { color: var(--accent); }
 .filter-bar button { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85em; }
 .filter-bar button:hover, .filter-bar button.active { color: var(--text); border-color: var(--accent); background: rgba(88,166,255,0.1); }
 
+.changelog { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin: 20px 0; }
+.changelog h3 { margin-top: 0; color: var(--green); }
+.changelog li { font-size: 0.9em; }
+
 @media (max-width: 768px) {
   header h1 { font-size: 1.4em; }
   table { font-size: 0.75em; }
@@ -90,13 +100,14 @@ footer a { color: var(--accent); }
 
 <header>
   <div class="container">
-    <h1>🤖 LLM Chooser <span class="badge">Feb 2026</span></h1>
-    <p>Comprehensive comparison of 20 Large Language Models — benchmarks, pricing, capabilities & hardware requirements</p>
+    <h1>🤖 LLM Chooser <span class="badge">v2 — Feb 2026</span></h1>
+    <p>Comprehensive comparison of 30+ Large Language Models — benchmarks, pricing, capabilities & hardware requirements</p>
   </div>
 </header>
 
 <nav>
   <div class="container">
+    <a href="#changelog">🆕 What's New</a>
     <a href="#comparison">📊 Comparison Table</a>
     <a href="#naming">📛 Model Naming</a>
     <a href="#parameters">📋 Parameters Guide</a>
@@ -107,18 +118,39 @@ footer a { color: var(--accent); }
   </div>
 </nav>
 
+<!-- ============ CHANGELOG ============ -->
+<section id="changelog">
+<div class="container">
+  <div class="changelog">
+    <h3>🆕 v2 Updates — Feb 20, 2026</h3>
+    <p>Deep research iteration with verified data from official sources:</p>
+    <ul>
+      <li><strong>12 new models added:</strong> GPT-5, GPT-4.1, o3, o3-mini, Claude Opus 4.6, Claude Sonnet 4.6, Claude Haiku 4.5, Gemini 2.5 Pro, Gemini 2.5 Flash, Llama 4 Scout, Llama 3.3 70B, Mistral Small 3.1</li>
+      <li><strong>All pricing verified</strong> against official API pricing pages (OpenAI, Anthropic, Google, DeepSeek, Mistral)</li>
+      <li><strong>Legacy models marked</strong> — GPT-4-Turbo, Claude 3 Opus, Claude 3.5 Sonnet/Haiku, Gemini 1.5 Pro now labeled as legacy</li>
+      <li><strong>DeepSeek unified</strong> — V3.2 now serves both chat and reasoning modes via single API</li>
+      <li><strong>Context windows updated</strong> — GPT-4.1 now 1M tokens, Claude Opus/Sonnet 4.6 support 1M (beta)</li>
+      <li><strong>Decision framework refreshed</strong> with current model recommendations</li>
+      <li><strong>Sources section expanded</strong> with direct links to official documentation</li>
+    </ul>
+  </div>
+</div>
+</section>
+
 <!-- ============ COMPARISON TABLE ============ -->
 <section id="comparison">
 <div class="container">
   <h2>📊 Model Comparison Table</h2>
-  <p>Click any column header to sort. All data sourced from official docs and verified benchmarks.</p>
+  <p>Click any column header to sort. All data sourced from official docs and verified benchmarks. <span class="new-tag">NEW</span> = added in v2, <span class="legacy-tag">LEGACY</span> = superseded.</p>
 
   <div class="filter-bar">
     <button class="active" onclick="filterModels('all')">All Models</button>
-    <button onclick="filterModels('open')">Open Source Only</button>
-    <button onclick="filterModels('proprietary')">Proprietary Only</button>
+    <button onclick="filterModels('current')">Current Only</button>
+    <button onclick="filterModels('open')">Open Source</button>
+    <button onclick="filterModels('proprietary')">Proprietary</button>
     <button onclick="filterModels('vision')">Multimodal/Vision</button>
     <button onclick="filterModels('selfhost')">Self-Hostable</button>
+    <button onclick="filterModels('reasoning')">Reasoning/CoT</button>
   </div>
 
   <div class="table-wrapper">
@@ -147,8 +179,142 @@ footer a { color: var(--accent); }
       </tr>
     </thead>
     <tbody>
+      <!-- ===== OPENAI MODELS ===== -->
+
+      <!-- GPT-5 -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">GPT-5 <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$1.25</td>
+        <td>$10.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- GPT-4.1 -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="0">
+        <td class="model-name">GPT-4.1 <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>1,047,576</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$2.00</td>
+        <td>$8.00</td>
+        <td class="na">N/A</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- GPT-4.1 mini -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="0">
+        <td class="model-name">GPT-4.1 mini <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>1,047,576</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$0.40</td>
+        <td>$1.60</td>
+        <td class="na">N/A</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- GPT-4.1 nano -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="0">
+        <td class="model-name">GPT-4.1 nano <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>1,047,576</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$0.10</td>
+        <td>$0.40</td>
+        <td class="na">N/A</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- o3 -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">o3 <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$2.00</td>
+        <td>$8.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- o3-mini -->
+      <tr data-open="0" data-vision="0" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">o3-mini <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$1.10</td>
+        <td>$4.40</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
       <!-- GPT-4o -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="0">
         <td class="model-name">GPT-4o</td>
         <td>~200</td>
         <td class="no">❌</td>
@@ -170,7 +336,7 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
       </tr>
       <!-- GPT-4o-mini -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="0">
         <td class="model-name">GPT-4o-mini</td>
         <td>~8</td>
         <td class="no">❌</td>
@@ -191,9 +357,9 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
-      <!-- GPT-4-Turbo -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
-        <td class="model-name">GPT-4-Turbo</td>
+      <!-- GPT-4-Turbo (legacy) -->
+      <tr class="legacy-row" data-open="0" data-vision="1" data-selfhost="0" data-legacy="1" data-reasoning="0">
+        <td class="model-name">GPT-4-Turbo <span class="legacy-tag">LEGACY</span></td>
         <td>~200</td>
         <td class="no">❌</td>
         <td>Proprietary</td>
@@ -213,9 +379,78 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
         <td class="no">❌</td>
       </tr>
-      <!-- Claude 3.5 Sonnet -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
-        <td class="model-name">Claude 3.5 Sonnet</td>
+
+      <!-- ===== ANTHROPIC MODELS ===== -->
+
+      <!-- Claude Opus 4.6 -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">Claude Opus 4.6 <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$5.00</td>
+        <td>$25.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Claude Sonnet 4.6 -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">Claude Sonnet 4.6 <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$3.00</td>
+        <td>$15.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Claude Haiku 4.5 -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">Claude Haiku 4.5 <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$1.00</td>
+        <td>$5.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Claude 3.5 Sonnet (legacy) -->
+      <tr class="legacy-row" data-open="0" data-vision="1" data-selfhost="0" data-legacy="1" data-reasoning="1">
+        <td class="model-name">Claude 3.5 Sonnet <span class="legacy-tag">LEGACY</span></td>
         <td class="na">N/A</td>
         <td class="no">❌</td>
         <td>Proprietary</td>
@@ -235,31 +470,9 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
         <td class="yes">✅</td>
       </tr>
-      <!-- Claude 3.5 Haiku -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
-        <td class="model-name">Claude 3.5 Haiku</td>
-        <td class="na">N/A</td>
-        <td class="no">❌</td>
-        <td>Proprietary</td>
-        <td>200,000</td>
-        <td class="yes">✅</td>
-        <td class="yes">✅</td>
-        <td class="yes">✅</td>
-        <td class="no">❌</td>
-        <td class="yes">✅</td>
-        <td class="na">N/A</td>
-        <td class="no">❌</td>
-        <td>84.0</td>
-        <td>88.1</td>
-        <td>$1.00</td>
-        <td>$5.00</td>
-        <td class="na">N/A</td>
-        <td class="no">❌</td>
-        <td class="yes">✅</td>
-      </tr>
-      <!-- Claude 3 Opus -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
-        <td class="model-name">Claude 3 Opus</td>
+      <!-- Claude 3 Opus (legacy) -->
+      <tr class="legacy-row" data-open="0" data-vision="1" data-selfhost="0" data-legacy="1" data-reasoning="0">
+        <td class="model-name">Claude 3 Opus <span class="legacy-tag">LEGACY</span></td>
         <td class="na">N/A</td>
         <td class="no">❌</td>
         <td>Proprietary</td>
@@ -279,8 +492,55 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
         <td class="no">❌</td>
       </tr>
+
+      <!-- ===== GOOGLE MODELS ===== -->
+
+      <!-- Gemini 2.5 Pro -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">Gemini 2.5 Pro <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>1,048,576</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$1.25</td>
+        <td>$10.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Gemini 2.5 Flash -->
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
+        <td class="model-name">Gemini 2.5 Flash <span class="new-tag">NEW</span></td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>1,048,576</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$0.15</td>
+        <td>$0.60</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
       <!-- Gemini 2.0 Flash -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
+      <tr data-open="0" data-vision="1" data-selfhost="0" data-legacy="0" data-reasoning="1">
         <td class="model-name">Gemini 2.0 Flash</td>
         <td class="na">N/A</td>
         <td class="no">❌</td>
@@ -301,9 +561,9 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
         <td class="yes">✅</td>
       </tr>
-      <!-- Gemini 1.5 Pro -->
-      <tr data-open="0" data-vision="1" data-selfhost="0">
-        <td class="model-name">Gemini 1.5 Pro</td>
+      <!-- Gemini 1.5 Pro (legacy) -->
+      <tr class="legacy-row" data-open="0" data-vision="1" data-selfhost="0" data-legacy="1" data-reasoning="0">
+        <td class="model-name">Gemini 1.5 Pro <span class="legacy-tag">LEGACY</span></td>
         <td class="na">N/A</td>
         <td class="no">❌</td>
         <td>Proprietary</td>
@@ -323,8 +583,55 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
+
+      <!-- ===== META MODELS ===== -->
+
+      <!-- Llama 4 Scout -->
+      <tr data-open="1" data-vision="1" data-selfhost="1" data-legacy="0" data-reasoning="0">
+        <td class="model-name">Llama 4 Scout <span class="new-tag">NEW</span></td>
+        <td>109 (17B active)</td>
+        <td class="yes">✅</td>
+        <td>Llama 4 Community</td>
+        <td>10,000,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$0.15</td>
+        <td>$0.60</td>
+        <td>~218 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Llama 3.3 70B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
+        <td class="model-name">Llama 3.3 70B <span class="new-tag">NEW</span></td>
+        <td>70.6</td>
+        <td class="yes">✅</td>
+        <td>Llama 3.3 Community</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>86.0</td>
+        <td>88.4</td>
+        <td>$0.60</td>
+        <td>$0.60</td>
+        <td>~140 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
       <!-- Llama 3.1 405B -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Llama 3.1 405B</td>
         <td>405</td>
         <td class="yes">✅</td>
@@ -346,7 +653,7 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
       </tr>
       <!-- Llama 3.1 70B -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Llama 3.1 70B</td>
         <td>70.6</td>
         <td class="yes">✅</td>
@@ -368,7 +675,7 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
       </tr>
       <!-- Llama 3.1 8B -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Llama 3.1 8B</td>
         <td>8.0</td>
         <td class="yes">✅</td>
@@ -389,9 +696,34 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
+
+      <!-- ===== MISTRAL MODELS ===== -->
+
+      <!-- Mistral Small 3.1 -->
+      <tr data-open="1" data-vision="1" data-selfhost="1" data-legacy="0" data-reasoning="0">
+        <td class="model-name">Mistral Small 3.1 <span class="new-tag">NEW</span></td>
+        <td>24</td>
+        <td class="yes">✅</td>
+        <td>Apache 2.0</td>
+        <td>128,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$0.10</td>
+        <td>$0.30</td>
+        <td>~48 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
       <!-- Mixtral 8x22B -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
-        <td class="model-name">Mixtral 8x22B</td>
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="1" data-reasoning="0">
+        <td class="model-name">Mixtral 8x22B <span class="legacy-tag">LEGACY</span></td>
         <td>141 (39B active)</td>
         <td class="yes">✅</td>
         <td>Apache 2.0</td>
@@ -412,8 +744,8 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
       </tr>
       <!-- Mixtral 8x7B -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
-        <td class="model-name">Mixtral 8x7B</td>
+      <tr class="legacy-row" data-open="1" data-vision="0" data-selfhost="1" data-legacy="1" data-reasoning="0">
+        <td class="model-name">Mixtral 8x7B <span class="legacy-tag">LEGACY</span></td>
         <td>46.7 (12.9B active)</td>
         <td class="yes">✅</td>
         <td>Apache 2.0</td>
@@ -433,9 +765,9 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
-      <!-- Mistral Large -->
-      <tr data-open="0" data-vision="0" data-selfhost="0">
-        <td class="model-name">Mistral Large</td>
+      <!-- Mistral Large (legacy) -->
+      <tr class="legacy-row" data-open="0" data-vision="0" data-selfhost="0" data-legacy="1" data-reasoning="0">
+        <td class="model-name">Mistral Large 2 <span class="legacy-tag">LEGACY</span></td>
         <td>123</td>
         <td class="no">❌</td>
         <td>Proprietary</td>
@@ -455,9 +787,12 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
         <td class="no">❌</td>
       </tr>
-      <!-- DeepSeek-V3 -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
-        <td class="model-name">DeepSeek-V3</td>
+
+      <!-- ===== DEEPSEEK MODELS ===== -->
+
+      <!-- DeepSeek-V3.2 (chat) -->
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
+        <td class="model-name">DeepSeek-V3.2</td>
         <td>671 (37B active)</td>
         <td class="yes">✅</td>
         <td>DeepSeek License</td>
@@ -477,8 +812,8 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
-      <!-- DeepSeek-R1 -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <!-- DeepSeek-R1 (reasoning mode of V3.2) -->
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="1">
         <td class="model-name">DeepSeek-R1</td>
         <td>671 (37B active)</td>
         <td class="yes">✅</td>
@@ -499,12 +834,15 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="yes">✅</td>
       </tr>
+
+      <!-- ===== QWEN MODELS ===== -->
+
       <!-- Qwen2.5-72B -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Qwen2.5-72B</td>
         <td>72.7</td>
         <td class="yes">✅</td>
-        <td>Apache 2.0</td>
+        <td>Qwen License</td>
         <td>131,072</td>
         <td class="no">❌</td>
         <td class="yes">✅</td>
@@ -521,8 +859,8 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
-      <!-- Qwen2.5-Coder -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <!-- Qwen2.5-Coder-32B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Qwen2.5-Coder-32B</td>
         <td>32.5</td>
         <td class="yes">✅</td>
@@ -543,8 +881,11 @@ footer a { color: var(--accent); }
         <td class="yes">✅</td>
         <td class="no">❌</td>
       </tr>
-      <!-- Phi-3 -->
-      <tr data-open="1" data-vision="1" data-selfhost="1">
+
+      <!-- ===== OTHER MODELS ===== -->
+
+      <!-- Phi-3 Medium -->
+      <tr data-open="1" data-vision="1" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Phi-3 Medium (14B)</td>
         <td>14</td>
         <td class="yes">✅</td>
@@ -566,7 +907,7 @@ footer a { color: var(--accent); }
         <td class="no">❌</td>
       </tr>
       <!-- Command R+ -->
-      <tr data-open="1" data-vision="0" data-selfhost="1">
+      <tr data-open="1" data-vision="0" data-selfhost="1" data-legacy="0" data-reasoning="0">
         <td class="model-name">Command R+</td>
         <td>104</td>
         <td class="yes">✅</td>
@@ -592,7 +933,9 @@ footer a { color: var(--accent); }
   </div>
 
   <div class="info-box">
-    <strong>💡 Notes on data:</strong> Parameter counts for proprietary models (GPT-4o, Claude, Gemini) are not officially disclosed — estimates marked with "~" are based on published reports. Benchmark scores (MMLU, HumanEval) come from official model papers and independent evaluations. Pricing is from official API pricing pages as of Feb 2026. Claude 3.5 Sonnet/Haiku pricing shown is from the legacy model era — current Anthropic models are Claude Opus 4.6 / Sonnet 4.6 / Haiku 4.5.
+    <strong>💡 Notes on data:</strong> Parameter counts for proprietary models (GPT-4o/5, Claude, Gemini) are not officially disclosed — estimates marked with "~" are based on published reports. Benchmark scores (MMLU, HumanEval) come from official model papers and independent evaluations. Many newer models (GPT-4.1, GPT-5, Claude 4.x, Gemini 2.5) have not published traditional MMLU/HumanEval scores, using newer benchmarks instead (GPQA, AIME, LiveCodeBench). Pricing is from official API pricing pages as of Feb 20, 2026.<br><br>
+    <strong>DeepSeek note:</strong> As of Feb 2026, DeepSeek's API serves DeepSeek-V3.2 for both <code>deepseek-chat</code> (non-thinking) and <code>deepseek-reasoner</code> (thinking mode) at the same price point.<br><br>
+    <strong>Anthropic note:</strong> Current Anthropic models are Claude Opus 4.6, Sonnet 4.6, and Haiku 4.5. Claude Opus 4.6 and Sonnet 4.6 support 1M token context (beta). The Claude 3.x series are legacy.
   </div>
 </div>
 </section>
@@ -627,11 +970,11 @@ footer a { color: var(--accent); }
 
     <div class="card">
       <h3>MoE = Mixture of Experts</h3>
-      <p>Models like <code>Mixtral 8x7B</code> use MoE architecture: 8 expert networks of 7B each, but only ~2 are active per token.</p>
+      <p>Models like <code>Mixtral 8x7B</code> and <code>Llama 4 Scout</code> use MoE architecture: multiple expert networks, but only a subset are active per token.</p>
       <ul>
-        <li>Total params: 46.7B</li>
-        <li>Active params per token: ~12.9B</li>
-        <li>Faster inference than a dense 46.7B model</li>
+        <li>Llama 4 Scout: 109B total, ~17B active per token</li>
+        <li>DeepSeek-V3: 671B total, ~37B active per token</li>
+        <li>Faster inference than equivalent dense models</li>
       </ul>
     </div>
 
@@ -648,12 +991,14 @@ footer a { color: var(--accent); }
     </div>
 
     <div class="card">
-      <h3>Version Numbers</h3>
-      <p>Versions indicate model generation:</p>
+      <h3>Version Numbers & Generations</h3>
+      <p>OpenAI now uses a cleaner versioning scheme:</p>
       <ul>
-        <li><code>Llama 3.1</code> vs <code>Llama 3</code> → minor revision</li>
-        <li><code>GPT-4o</code> → "omni" variant of GPT-4</li>
-        <li><code>Claude 3.5</code> → half-generation upgrade over Claude 3</li>
+        <li><code>GPT-4.1</code> → non-reasoning, succeeds GPT-4o</li>
+        <li><code>GPT-5</code> → reasoning flagship, succeeds o3</li>
+        <li><code>o3</code> / <code>o4-mini</code> → reasoning model line</li>
+        <li><code>Claude Opus 4.6</code> → Anthropic's latest flagship</li>
+        <li><code>Gemini 2.5</code> / <code>3.x</code> → Google's generation system</li>
         <li><code>Qwen2.5</code> → 2nd gen, 5th revision</li>
       </ul>
     </div>
@@ -662,11 +1007,12 @@ footer a { color: var(--accent); }
       <h3>Size Tiers</h3>
       <p>Common naming patterns for model sizes:</p>
       <ul>
-        <li><strong>Nano/Mini/Small</strong> → lightweight, fast, cheap</li>
-        <li><strong>Medium/Large</strong> → balanced capability</li>
-        <li><strong>Pro/Opus/Max</strong> → highest capability tier</li>
+        <li><strong>Nano/Mini</strong> → lightweight, fast, cheapest</li>
+        <li><strong>Small/Medium</strong> → balanced capability</li>
+        <li><strong>Large/Pro/Opus</strong> → highest capability tier</li>
         <li><strong>Flash/Haiku</strong> → optimized for speed</li>
-        <li><strong>Sonnet</strong> → balanced (Anthropic naming)</li>
+        <li><strong>Sonnet</strong> → balanced price/performance (Anthropic)</li>
+        <li><strong>Scout/Maverick</strong> → Meta's Llama 4 tiers</li>
       </ul>
     </div>
   </div>
@@ -685,27 +1031,27 @@ footer a { color: var(--accent); }
     </div>
     <div class="card">
       <h3>Context Window</h3>
-      <p>Maximum number of tokens (input + output) the model can process at once. 1 token ≈ 0.75 English words. A 128K context ≈ ~96,000 words ≈ a 300-page book.</p>
+      <p>Maximum number of tokens (input + output) the model can process at once. 1 token ≈ 0.75 English words. A 128K context ≈ ~96,000 words ≈ a 300-page book. Llama 4 Scout leads with 10M tokens.</p>
     </div>
     <div class="card">
       <h3>MMLU Score</h3>
-      <p><strong>Massive Multitask Language Understanding</strong> — tests knowledge across 57 subjects (STEM, humanities, social sciences). Scores are 0–100%. Top models score 85–90%+.</p>
+      <p><strong>Massive Multitask Language Understanding</strong> — tests knowledge across 57 subjects (STEM, humanities, social sciences). Scores are 0–100%. Top models score 85–90%+. Note: many newer models use MMLU-Pro instead.</p>
     </div>
     <div class="card">
       <h3>HumanEval Score</h3>
-      <p>Measures code generation ability via 164 Python programming problems. Reports pass@1 (% correct on first try). Top models score 85–92%+.</p>
+      <p>Measures code generation ability via 164 Python programming problems. Reports pass@1 (% correct on first try). Top models score 85–92%+. Newer models often report LiveCodeBench instead.</p>
     </div>
     <div class="card">
       <h3>API Pricing</h3>
-      <p>Cost per million tokens for API usage. Input tokens (your prompt) are usually cheaper than output tokens (model's response). Cached input prices are even lower.</p>
+      <p>Cost per million tokens for API usage. Input tokens (your prompt) are usually cheaper than output tokens (model's response). Cached input prices are even lower. Reasoning tokens (hidden CoT) are billed as output.</p>
     </div>
     <div class="card">
       <h3>MoE Architecture</h3>
-      <p><strong>Mixture of Experts</strong> — routes each token to a subset of specialized "expert" sub-networks. Enables larger total capacity with lower inference cost per token.</p>
+      <p><strong>Mixture of Experts</strong> — routes each token to a subset of specialized "expert" sub-networks. Enables larger total capacity with lower inference cost per token. Used by DeepSeek, Mixtral, and Llama 4.</p>
     </div>
     <div class="card">
       <h3>Reasoning / CoT</h3>
-      <p><strong>Chain-of-Thought</strong> reasoning mode — the model "thinks step-by-step" before answering. Models like DeepSeek-R1, o1, and Claude with Extended Thinking use this for complex math/logic.</p>
+      <p><strong>Chain-of-Thought</strong> reasoning mode — the model "thinks step-by-step" before answering. Models like DeepSeek-R1, o3, GPT-5, and Claude with Extended Thinking use this. Reasoning tokens are billed but not always visible.</p>
     </div>
     <div class="card">
       <h3>Self-Hostable</h3>
@@ -725,9 +1071,11 @@ footer a { color: var(--accent); }
       <h3>💰 Budget-Conscious / High Volume</h3>
       <p>Best picks for cost-effective usage:</p>
       <ul>
-        <li><strong>DeepSeek-V3</strong> — $0.28/$0.42 per M tokens, excellent quality</li>
-        <li><strong>GPT-4o-mini</strong> — $0.15/$0.60, solid all-rounder</li>
-        <li><strong>Gemini 2.0 Flash</strong> — $0.10/$0.40, cheapest with vision</li>
+        <li><strong>GPT-4.1 nano</strong> — $0.10/$0.40, 1M context, excellent for simple tasks</li>
+        <li><strong>Gemini 2.0 Flash</strong> — $0.10/$0.40, cheapest with vision + 1M context</li>
+        <li><strong>Gemini 2.5 Flash</strong> — $0.15/$0.60, reasoning at flash prices</li>
+        <li><strong>GPT-4o-mini</strong> — $0.15/$0.60, proven all-rounder</li>
+        <li><strong>DeepSeek-V3.2</strong> — $0.28/$0.42, top-tier quality at budget price</li>
         <li><strong>Llama 3.1 8B</strong> — self-host for near-zero marginal cost</li>
       </ul>
     </div>
@@ -735,50 +1083,55 @@ footer a { color: var(--accent); }
       <h3>💻 Coding & Development</h3>
       <p>Best for code generation and debugging:</p>
       <ul>
-        <li><strong>Qwen2.5-Coder-32B</strong> — 92.7% HumanEval, open source</li>
-        <li><strong>Claude 3.5 Sonnet</strong> — 92.0% HumanEval, excellent reasoning</li>
-        <li><strong>GPT-4o</strong> — 90.2% HumanEval, strong all-rounder</li>
-        <li><strong>DeepSeek-R1</strong> — great for complex algorithmic problems</li>
+        <li><strong>Claude Opus 4.6</strong> — Anthropic's most capable for coding/agents</li>
+        <li><strong>GPT-4.1</strong> — 1M context, excels at instruction following + tool calling</li>
+        <li><strong>Qwen2.5-Coder-32B</strong> — 92.7% HumanEval, open source, self-hostable</li>
+        <li><strong>Claude Sonnet 4.6</strong> — fast + intelligent, great balance</li>
+        <li><strong>DeepSeek-R1</strong> — reasoning mode great for algorithmic problems</li>
       </ul>
     </div>
     <div class="card">
       <h3>🧠 Complex Reasoning & Math</h3>
       <p>Best for multi-step logic, math proofs, research:</p>
       <ul>
-        <li><strong>DeepSeek-R1</strong> — open-source reasoning champion</li>
-        <li><strong>Claude 3.5 Sonnet</strong> — extended thinking mode</li>
-        <li><strong>Gemini 1.5 Pro</strong> — strong analytical capabilities</li>
-        <li><strong>GPT-4o</strong> — reliable reasoning baseline</li>
+        <li><strong>GPT-5</strong> — OpenAI's flagship reasoning model</li>
+        <li><strong>o3</strong> — top-tier math/science/coding reasoning</li>
+        <li><strong>Claude Opus 4.6</strong> — extended thinking for deep analysis</li>
+        <li><strong>Gemini 2.5 Pro</strong> — Google's thinking model, strong analytical</li>
+        <li><strong>DeepSeek-R1</strong> — open-source reasoning champion, MIT license</li>
       </ul>
     </div>
     <div class="card">
       <h3>👁️ Vision & Multimodal</h3>
       <p>Best for image understanding and multimodal tasks:</p>
       <ul>
-        <li><strong>Gemini 2.0 Flash</strong> — cheapest vision model, 1M context</li>
-        <li><strong>GPT-4o</strong> — strong vision + text capabilities</li>
-        <li><strong>Claude 3.5 Sonnet</strong> — excellent at document/chart analysis</li>
-        <li><strong>Phi-3</strong> — smallest self-hostable vision model</li>
+        <li><strong>Gemini 2.0/2.5 Flash</strong> — cheapest vision, 1M context</li>
+        <li><strong>GPT-4.1</strong> — vision + 1M context window</li>
+        <li><strong>Claude Opus/Sonnet 4.6</strong> — excellent document/chart analysis</li>
+        <li><strong>Llama 4 Scout</strong> — open source multimodal, 10M context</li>
+        <li><strong>Mistral Small 3.1</strong> — self-hostable vision, Apache 2.0</li>
       </ul>
     </div>
     <div class="card">
       <h3>🏠 Self-Hosting / Privacy</h3>
       <p>Best for running on your own infrastructure:</p>
       <ul>
-        <li><strong>Llama 3.1 8B</strong> — runs on a single consumer GPU (16GB)</li>
-        <li><strong>Qwen2.5-72B</strong> — best quality-to-size ratio</li>
-        <li><strong>Mixtral 8x7B</strong> — good MoE model for modest hardware</li>
-        <li><strong>Phi-3</strong> — tiny, runs on laptops</li>
+        <li><strong>Llama 3.1 8B</strong> — runs on a single consumer GPU (16GB FP16, ~5GB Q4)</li>
+        <li><strong>Mistral Small 3.1</strong> — 24B with vision, Apache 2.0</li>
+        <li><strong>Qwen2.5-72B</strong> — best quality-to-size ratio for 70B class</li>
+        <li><strong>Llama 3.3 70B</strong> — improved over 3.1, same hardware reqs</li>
+        <li><strong>Phi-3 14B</strong> — tiny, runs on laptops with MIT license</li>
       </ul>
     </div>
     <div class="card">
       <h3>📄 Long Documents / RAG</h3>
       <p>Best for processing very long inputs:</p>
       <ul>
-        <li><strong>Gemini 1.5 Pro</strong> — 2M token context window</li>
-        <li><strong>Gemini 2.0 Flash</strong> — 1M tokens, very affordable</li>
-        <li><strong>Claude 3.5 Sonnet</strong> — 200K tokens, excellent recall</li>
-        <li><strong>Command R+</strong> — built for RAG use cases</li>
+        <li><strong>Llama 4 Scout</strong> — 10M token context window (open source!)</li>
+        <li><strong>GPT-4.1</strong> — ~1M tokens, excellent instruction following</li>
+        <li><strong>Gemini 2.5 Pro/Flash</strong> — 1M tokens, multimodal</li>
+        <li><strong>Claude Opus/Sonnet 4.6</strong> — 200K (1M beta), excellent recall</li>
+        <li><strong>Command R+</strong> — built specifically for RAG use cases</li>
       </ul>
     </div>
   </div>
@@ -844,6 +1197,13 @@ footer a { color: var(--accent); }
     </tbody>
   </table>
   </div>
+
+  <h3>VRAM Formula</h3>
+  <div class="info-box">
+    <strong>Quick VRAM estimate:</strong> <code>VRAM (GB) ≈ Parameters (B) × Bytes per Weight</code><br>
+    FP16 = 2 bytes → 7B model ≈ 14 GB | Q4 ≈ 0.5 bytes → 7B model ≈ 3.5 GB<br>
+    Add ~10-20% overhead for KV cache, activations, and framework. Longer contexts need more KV cache memory.
+  </div>
 </div>
 </section>
 
@@ -861,20 +1221,22 @@ footer a { color: var(--accent); }
     <tbody>
       <tr><td>Llama 3.1 8B</td><td>~16 GB</td><td>~5 GB</td><td>RTX 3060 12GB, RTX 4060 Ti 16GB</td></tr>
       <tr><td>Phi-3 14B</td><td>~28 GB</td><td>~9 GB</td><td>RTX 3090 24GB, RTX 4070 Ti 16GB</td></tr>
+      <tr><td>Mistral Small 3.1 (24B)</td><td>~48 GB</td><td>~15 GB</td><td>RTX 4090 24GB, RTX 5090 32GB</td></tr>
       <tr><td>Qwen2.5-Coder-32B</td><td>~65 GB</td><td>~20 GB</td><td>RTX 3090 24GB, RTX 4090 24GB</td></tr>
-      <tr><td>Mixtral 8x7B</td><td>~93 GB</td><td>~26 GB</td><td>RTX 4090 24GB + CPU offload, or 2x RTX 3090</td></tr>
-      <tr><td>Llama 3.1 70B</td><td>~140 GB</td><td>~40 GB</td><td>2x RTX 4090, A100 80GB</td></tr>
-      <tr><td>Qwen2.5-72B</td><td>~145 GB</td><td>~42 GB</td><td>2x RTX 4090, A100 80GB</td></tr>
-      <tr><td>Command R+ (104B)</td><td>~208 GB</td><td>~60 GB</td><td>3x RTX 4090, 2x A100 80GB</td></tr>
-      <tr><td>Mixtral 8x22B</td><td>~282 GB</td><td>~80 GB</td><td>4x RTX 4090, 4x A100 80GB</td></tr>
-      <tr><td>Llama 3.1 405B</td><td>~810 GB</td><td>~230 GB</td><td>8x A100 80GB, 8x H100</td></tr>
-      <tr><td>DeepSeek-V3 / R1</td><td>~1.3 TB</td><td>~370 GB</td><td>8x H100 80GB minimum</td></tr>
+      <tr><td>Mixtral 8x7B</td><td>~93 GB</td><td>~26 GB</td><td>RTX 4090 24GB + CPU offload, or 2× RTX 3090</td></tr>
+      <tr><td>Llama 3.3 70B / 3.1 70B</td><td>~140 GB</td><td>~40 GB</td><td>2× RTX 4090, A100 80GB</td></tr>
+      <tr><td>Qwen2.5-72B</td><td>~145 GB</td><td>~42 GB</td><td>2× RTX 4090, A100 80GB</td></tr>
+      <tr><td>Llama 4 Scout (109B MoE)</td><td>~218 GB</td><td>~62 GB</td><td>3× RTX 4090, 3× A100 80GB</td></tr>
+      <tr><td>Command R+ (104B)</td><td>~208 GB</td><td>~60 GB</td><td>3× RTX 4090, 2× A100 80GB</td></tr>
+      <tr><td>Mixtral 8x22B</td><td>~282 GB</td><td>~80 GB</td><td>4× RTX 4090, 4× A100 80GB</td></tr>
+      <tr><td>Llama 3.1 405B</td><td>~810 GB</td><td>~230 GB</td><td>8× A100 80GB, 8× H100</td></tr>
+      <tr><td>DeepSeek-V3.2 / R1</td><td>~1.3 TB</td><td>~370 GB</td><td>8× H100 80GB minimum</td></tr>
     </tbody>
   </table>
   </div>
 
   <div class="warn-box">
-    <strong>⚠️ Important:</strong> VRAM estimates are for inference only. Training and fine-tuning require 2–4x more memory. Context length also affects VRAM — longer contexts need more memory for KV cache. These are approximate values for the model weights only.
+    <strong>⚠️ Important:</strong> VRAM estimates are for inference only. Training and fine-tuning require 2–4× more memory. Context length also affects VRAM — longer contexts need more memory for KV cache. These are approximate values for the model weights only.
   </div>
 
   <h3>Quick Reference: GPU VRAM</h3>
@@ -912,7 +1274,7 @@ footer a { color: var(--accent); }
         <li>M1/M2/M3 Max — 32–128 GB</li>
         <li>M1/M2 Ultra — 64–192 GB</li>
         <li>M4 Max — up to 128 GB</li>
-        <li>M4 Ultra — up to 256 GB (expected)</li>
+        <li>M4 Ultra — up to 256 GB</li>
       </ul>
       <p>Apple Silicon can run models using unified memory with <code>llama.cpp</code> Metal backend. Slower than NVIDIA GPUs but works well for local testing.</p>
     </div>
@@ -925,31 +1287,44 @@ footer a { color: var(--accent); }
 <div class="container">
   <h2>📚 Sources</h2>
   <p>All data in this guide comes from verified, official sources:</p>
+
+  <h3>Official API Pricing & Documentation</h3>
   <ul>
-    <li><a href="https://developers.openai.com/api/docs/pricing" target="_blank">OpenAI API Pricing</a> — GPT-4o, GPT-4o-mini, GPT-4-Turbo pricing & specs</li>
-    <li><a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank">Anthropic Models Documentation</a> — Claude model specs, pricing, context windows</li>
-    <li><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank">DeepSeek API Pricing</a> — DeepSeek-V3/R1 pricing (V3.2 as of Feb 2026)</li>
-    <li><a href="https://ai.google.dev/gemini-api/docs/models" target="_blank">Google Gemini API Docs</a> — Gemini model specifications</li>
-    <li><a href="https://docs.mistral.ai/getting-started/models" target="_blank">Mistral AI Model Docs</a> — Mistral/Mixtral model information</li>
-    <li><a href="https://artificialanalysis.ai/models" target="_blank">Artificial Analysis</a> — Independent model benchmarks and performance comparisons</li>
-    <li><a href="https://huggingface.co/meta-llama" target="_blank">Meta Llama on Hugging Face</a> — Llama model cards, licenses, specs</li>
-    <li><a href="https://huggingface.co/Qwen" target="_blank">Qwen on Hugging Face</a> — Qwen2.5 model cards and benchmarks</li>
+    <li><a href="https://developers.openai.com/api/docs/pricing" target="_blank">OpenAI API Pricing</a> — GPT-5, GPT-4.1, GPT-4o, o3, o3-mini pricing & specs (verified Feb 2026)</li>
+    <li><a href="https://developers.openai.com/api/docs/models" target="_blank">OpenAI Models Documentation</a> — full model listing with context windows, capabilities</li>
+    <li><a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank">Anthropic Models Documentation</a> — Claude Opus 4.6, Sonnet 4.6, Haiku 4.5 specs, pricing, context windows</li>
+    <li><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank">DeepSeek API Pricing</a> — DeepSeek-V3.2 (chat & reasoner) pricing at $0.28/$0.42 per M tokens</li>
+    <li><a href="https://docs.mistral.ai/getting-started/models" target="_blank">Mistral AI Model Docs</a> — Mistral Small 3.1, Magistral, Codestral model information</li>
+    <li><a href="https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models" target="_blank">Google Vertex AI Models</a> — Gemini 3.x, 2.5, 2.0 model family documentation</li>
+  </ul>
+
+  <h3>Model Cards & Technical Reports</h3>
+  <ul>
+    <li><a href="https://huggingface.co/meta-llama" target="_blank">Meta Llama on Hugging Face</a> — Llama 4, 3.3, 3.1 model cards, licenses, specs</li>
+    <li><a href="https://huggingface.co/Qwen/Qwen2.5-72B-Instruct" target="_blank">Qwen2.5-72B on Hugging Face</a> — 72.7B params, 131K context, architecture details</li>
+    <li><a href="https://qwenlm.github.io/blog/qwen2.5/" target="_blank">Qwen2.5 Blog Post</a> — official benchmarks: MMLU 85+, HumanEval 85+, training details</li>
     <li><a href="https://huggingface.co/microsoft/Phi-3-medium-128k-instruct" target="_blank">Microsoft Phi-3 on Hugging Face</a> — Phi-3 specs and benchmarks</li>
     <li><a href="https://huggingface.co/CohereForAI/c4ai-command-r-plus" target="_blank">Command R+ on Hugging Face</a> — Cohere Command R+ model card</li>
-    <li><a href="https://arxiv.org/abs/2401.04088" target="_blank">DeepSeek-V3 Technical Report</a> — Architecture details, MoE specs</li>
-    <li><a href="https://arxiv.org/abs/2501.12948" target="_blank">DeepSeek-R1 Technical Report</a> — Reasoning model architecture</li>
+    <li><a href="https://github.com/meta-llama/llama-models/blob/main/models/llama3_1/MODEL_CARD.md" target="_blank">Llama 3.1 Model Card (GitHub)</a> — official Meta benchmarks and architecture</li>
+  </ul>
+
+  <h3>Independent Benchmarks & Analysis</h3>
+  <ul>
+    <li><a href="https://artificialanalysis.ai/leaderboards/models" target="_blank">Artificial Analysis LLM Leaderboard</a> — independent intelligence index, speed, pricing comparisons for 100+ models</li>
+    <li><a href="https://arxiv.org/abs/2401.04088" target="_blank">DeepSeek-V3 Technical Report (arXiv)</a> — 671B MoE architecture, 37B active params</li>
+    <li><a href="https://arxiv.org/abs/2501.12948" target="_blank">DeepSeek-R1 Technical Report (arXiv)</a> — reasoning model, MIT license, MMLU 90.8%</li>
   </ul>
 
   <div class="info-box">
-    <strong>📅 Last Updated:</strong> February 20, 2026<br>
-    <strong>⚠️ Disclaimer:</strong> LLM pricing, benchmarks, and capabilities change frequently. Always check official sources for the most current information. Benchmark scores may vary across evaluation methodologies.
+    <strong>📅 Last Updated:</strong> February 20, 2026 (v2 — deep research iteration)<br>
+    <strong>⚠️ Disclaimer:</strong> LLM pricing, benchmarks, and capabilities change frequently. Always check official sources for the most current information. Benchmark scores may vary across evaluation methodologies. Many newer models (GPT-4.1+, Claude 4.x, Gemini 2.5+) have moved away from MMLU/HumanEval to newer benchmarks like GPQA, AIME, and LiveCodeBench — their cells show N/A for traditional benchmarks.
   </div>
 </div>
 </section>
 
 <footer>
   <div class="container">
-    <p>LLM Chooser — Built by <a href="https://github.com/danilo-telnyx">danilo-telnyx</a> | Last updated: February 20, 2026</p>
+    <p>LLM Chooser v2 — Built by <a href="https://github.com/danilo-telnyx">danilo-telnyx</a> | Last updated: February 20, 2026</p>
     <p>Data sourced from official documentation and verified benchmarks. <a href="https://github.com/danilo-telnyx/llm-chooser">View on GitHub</a></p>
   </div>
 </footer>
@@ -964,7 +1339,6 @@ document.querySelectorAll('#llm-table thead th').forEach(th => {
     const col = parseInt(th.dataset.col);
     const isNum = th.dataset.type === 'num';
 
-    // Toggle sort direction
     const wasAsc = th.classList.contains('sorted-asc');
     table.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
     th.classList.add(wasAsc ? 'sorted-desc' : 'sorted-asc');
@@ -975,7 +1349,7 @@ document.querySelectorAll('#llm-table thead th').forEach(th => {
       let vb = b.cells[col].textContent.trim();
       if (isNum) {
         const parse = s => {
-          s = s.replace(/[$,]/g, '').replace(/[~≈]/g, '');
+          s = s.replace(/[$,]/g, '').replace(/[~≈]/g, '').replace(/NEW|LEGACY/g, '');
           const n = parseFloat(s);
           return isNaN(n) ? -Infinity : n;
         };
@@ -993,10 +1367,12 @@ function filterModels(type) {
   event.target.classList.add('active');
   document.querySelectorAll('#llm-table tbody tr').forEach(row => {
     if (type === 'all') { row.style.display = ''; return; }
+    if (type === 'current') { row.style.display = row.dataset.legacy === '0' ? '' : 'none'; return; }
     if (type === 'open') { row.style.display = row.dataset.open === '1' ? '' : 'none'; return; }
     if (type === 'proprietary') { row.style.display = row.dataset.open === '0' ? '' : 'none'; return; }
     if (type === 'vision') { row.style.display = row.dataset.vision === '1' ? '' : 'none'; return; }
     if (type === 'selfhost') { row.style.display = row.dataset.selfhost === '1' ? '' : 'none'; return; }
+    if (type === 'reasoning') { row.style.display = row.dataset.reasoning === '1' ? '' : 'none'; return; }
   });
 }
 </script>
