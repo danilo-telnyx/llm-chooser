@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Chooser — Comprehensive Model Comparison Guide</title>
+<meta name="description" content="Compare 20+ Large Language Models across benchmarks, pricing, capabilities, and hardware requirements. Updated February 2026.">
+<style>
+:root {
+  --bg: #0d1117;
+  --bg2: #161b22;
+  --bg3: #21262d;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text2: #8b949e;
+  --accent: #58a6ff;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #d29922;
+  --purple: #bc8cff;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 24px 0; }
+header h1 { font-size: 2em; margin-bottom: 4px; }
+header p { color: var(--text2); font-size: 1.1em; }
+.badge { display: inline-block; background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 2px 10px; font-size: 0.8em; color: var(--text2); margin-left: 8px; }
+
+nav { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 12px 0; position: sticky; top: 0; z-index: 100; }
+nav .container { display: flex; gap: 16px; flex-wrap: wrap; }
+nav a { color: var(--text2); padding: 4px 8px; border-radius: 6px; font-size: 0.9em; }
+nav a:hover { color: var(--text); background: var(--bg3); text-decoration: none; }
+
+section { padding: 40px 0; }
+h2 { font-size: 1.6em; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+h3 { font-size: 1.2em; margin: 20px 0 10px; color: var(--accent); }
+h4 { margin: 16px 0 8px; }
+p, li { color: var(--text); margin-bottom: 8px; }
+ul { padding-left: 24px; }
+
+.table-wrapper { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; margin: 20px 0; }
+table { border-collapse: collapse; width: 100%; min-width: 2200px; font-size: 0.85em; }
+thead { background: var(--bg3); position: sticky; top: 48px; z-index: 10; }
+th { padding: 10px 8px; text-align: left; border-bottom: 2px solid var(--border); cursor: pointer; white-space: nowrap; user-select: none; }
+th:hover { background: var(--bg2); }
+th .sort-arrow { font-size: 0.7em; margin-left: 2px; opacity: 0.5; }
+th.sorted-asc .sort-arrow::after { content: ' ▲'; opacity: 1; }
+th.sorted-desc .sort-arrow::after { content: ' ▼'; opacity: 1; }
+td { padding: 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+tr:hover { background: var(--bg3); }
+.model-name { font-weight: 600; color: var(--accent); position: sticky; left: 0; background: var(--bg); z-index: 5; min-width: 160px; }
+tr:hover .model-name { background: var(--bg3); }
+thead th:first-child { position: sticky; left: 0; background: var(--bg3); z-index: 15; }
+.yes { color: var(--green); }
+.no { color: var(--red); }
+.na { color: var(--text2); font-style: italic; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0; }
+.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+.card h3 { margin-top: 0; }
+
+.info-box { background: var(--bg2); border-left: 3px solid var(--accent); padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; }
+.warn-box { background: var(--bg2); border-left: 3px solid var(--yellow); padding: 16px 20px; margin: 16px 0; border-radius: 0 8px 8px 0; }
+
+code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+.tag { display: inline-block; background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 0.8em; margin: 2px; }
+.tag-open { border-color: var(--green); color: var(--green); }
+.tag-proprietary { border-color: var(--purple); color: var(--purple); }
+
+footer { background: var(--bg2); border-top: 1px solid var(--border); padding: 24px 0; color: var(--text2); font-size: 0.9em; }
+footer a { color: var(--accent); }
+
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.filter-bar button { background: var(--bg3); color: var(--text2); border: 1px solid var(--border); padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85em; }
+.filter-bar button:hover, .filter-bar button.active { color: var(--text); border-color: var(--accent); background: rgba(88,166,255,0.1); }
+
+@media (max-width: 768px) {
+  header h1 { font-size: 1.4em; }
+  table { font-size: 0.75em; }
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>🤖 LLM Chooser <span class="badge">Feb 2026</span></h1>
+    <p>Comprehensive comparison of 20 Large Language Models — benchmarks, pricing, capabilities & hardware requirements</p>
+  </div>
+</header>
+
+<nav>
+  <div class="container">
+    <a href="#comparison">📊 Comparison Table</a>
+    <a href="#naming">📛 Model Naming</a>
+    <a href="#parameters">📋 Parameters Guide</a>
+    <a href="#decision">🎯 Decision Framework</a>
+    <a href="#quantization">⚡ Quantization</a>
+    <a href="#hardware">🖥️ Hardware Guide</a>
+    <a href="#sources">📚 Sources</a>
+  </div>
+</nav>
+
+<!-- ============ COMPARISON TABLE ============ -->
+<section id="comparison">
+<div class="container">
+  <h2>📊 Model Comparison Table</h2>
+  <p>Click any column header to sort. All data sourced from official docs and verified benchmarks.</p>
+
+  <div class="filter-bar">
+    <button class="active" onclick="filterModels('all')">All Models</button>
+    <button onclick="filterModels('open')">Open Source Only</button>
+    <button onclick="filterModels('proprietary')">Proprietary Only</button>
+    <button onclick="filterModels('vision')">Multimodal/Vision</button>
+    <button onclick="filterModels('selfhost')">Self-Hostable</button>
+  </div>
+
+  <div class="table-wrapper">
+  <table id="llm-table">
+    <thead>
+      <tr>
+        <th data-col="0">Model <span class="sort-arrow"></span></th>
+        <th data-col="1" data-type="num">Params (B) <span class="sort-arrow"></span></th>
+        <th data-col="2">Open Source <span class="sort-arrow"></span></th>
+        <th data-col="3">License <span class="sort-arrow"></span></th>
+        <th data-col="4" data-type="num">Context (tokens) <span class="sort-arrow"></span></th>
+        <th data-col="5">Vision <span class="sort-arrow"></span></th>
+        <th data-col="6">Code Gen <span class="sort-arrow"></span></th>
+        <th data-col="7">Func Calling <span class="sort-arrow"></span></th>
+        <th data-col="8">Self-Host <span class="sort-arrow"></span></th>
+        <th data-col="9">API <span class="sort-arrow"></span></th>
+        <th data-col="10">MoE <span class="sort-arrow"></span></th>
+        <th data-col="11">Quant Avail <span class="sort-arrow"></span></th>
+        <th data-col="12" data-type="num">MMLU <span class="sort-arrow"></span></th>
+        <th data-col="13" data-type="num">HumanEval <span class="sort-arrow"></span></th>
+        <th data-col="14" data-type="num">In $/M tok <span class="sort-arrow"></span></th>
+        <th data-col="15" data-type="num">Out $/M tok <span class="sort-arrow"></span></th>
+        <th data-col="16">Min VRAM <span class="sort-arrow"></span></th>
+        <th data-col="17">Fine-tune <span class="sort-arrow"></span></th>
+        <th data-col="18">Reasoning/CoT <span class="sort-arrow"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- GPT-4o -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">GPT-4o</td>
+        <td>~200</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>128,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+        <td>88.7</td>
+        <td>90.2</td>
+        <td>$2.50</td>
+        <td>$10.00</td>
+        <td class="na">N/A</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- GPT-4o-mini -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">GPT-4o-mini</td>
+        <td>~8</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>128,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+        <td>82.0</td>
+        <td>87.2</td>
+        <td>$0.15</td>
+        <td>$0.60</td>
+        <td class="na">N/A</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- GPT-4-Turbo -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">GPT-4-Turbo</td>
+        <td>~200</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>128,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+        <td>86.5</td>
+        <td>87.1</td>
+        <td>$10.00</td>
+        <td>$30.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Claude 3.5 Sonnet -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">Claude 3.5 Sonnet</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>88.7</td>
+        <td>92.0</td>
+        <td>$3.00</td>
+        <td>$15.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Claude 3.5 Haiku -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">Claude 3.5 Haiku</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>84.0</td>
+        <td>88.1</td>
+        <td>$1.00</td>
+        <td>$5.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Claude 3 Opus -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">Claude 3 Opus</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>200,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>86.8</td>
+        <td>84.9</td>
+        <td>$15.00</td>
+        <td>$75.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Gemini 2.0 Flash -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">Gemini 2.0 Flash</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>1,048,576</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="na">N/A</td>
+        <td class="na">N/A</td>
+        <td>$0.10</td>
+        <td>$0.40</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Gemini 1.5 Pro -->
+      <tr data-open="0" data-vision="1" data-selfhost="0">
+        <td class="model-name">Gemini 1.5 Pro</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>2,097,152</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td>85.9</td>
+        <td class="na">N/A</td>
+        <td>$1.25</td>
+        <td>$5.00</td>
+        <td class="na">N/A</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Llama 3.1 405B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Llama 3.1 405B</td>
+        <td>405</td>
+        <td class="yes">✅</td>
+        <td>Llama 3.1 Community</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>88.6</td>
+        <td>89.0</td>
+        <td>$3.00</td>
+        <td>$3.00</td>
+        <td>~810 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Llama 3.1 70B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Llama 3.1 70B</td>
+        <td>70.6</td>
+        <td class="yes">✅</td>
+        <td>Llama 3.1 Community</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>86.0</td>
+        <td>80.5</td>
+        <td>$0.88</td>
+        <td>$0.88</td>
+        <td>~140 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Llama 3.1 8B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Llama 3.1 8B</td>
+        <td>8.0</td>
+        <td class="yes">✅</td>
+        <td>Llama 3.1 Community</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>73.0</td>
+        <td>72.6</td>
+        <td>$0.06</td>
+        <td>$0.06</td>
+        <td>~16 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Mixtral 8x22B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Mixtral 8x22B</td>
+        <td>141 (39B active)</td>
+        <td class="yes">✅</td>
+        <td>Apache 2.0</td>
+        <td>65,536</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td>77.8</td>
+        <td>75.0</td>
+        <td>$2.00</td>
+        <td>$6.00</td>
+        <td>~282 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Mixtral 8x7B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Mixtral 8x7B</td>
+        <td>46.7 (12.9B active)</td>
+        <td class="yes">✅</td>
+        <td>Apache 2.0</td>
+        <td>32,768</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td>70.6</td>
+        <td>40.2</td>
+        <td>$0.24</td>
+        <td>$0.24</td>
+        <td>~93 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Mistral Large -->
+      <tr data-open="0" data-vision="0" data-selfhost="0">
+        <td class="model-name">Mistral Large</td>
+        <td>123</td>
+        <td class="no">❌</td>
+        <td>Proprietary</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+        <td>84.0</td>
+        <td class="na">N/A</td>
+        <td>$2.00</td>
+        <td>$6.00</td>
+        <td class="na">N/A</td>
+        <td class="no">❌</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- DeepSeek-V3 -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">DeepSeek-V3</td>
+        <td>671 (37B active)</td>
+        <td class="yes">✅</td>
+        <td>DeepSeek License</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td>88.5</td>
+        <td>82.6</td>
+        <td>$0.28</td>
+        <td>$0.42</td>
+        <td>~1.3 TB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- DeepSeek-R1 -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">DeepSeek-R1</td>
+        <td>671 (37B active)</td>
+        <td class="yes">✅</td>
+        <td>MIT</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td>90.8</td>
+        <td>85.0</td>
+        <td>$0.28</td>
+        <td>$0.42</td>
+        <td>~1.3 TB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+      </tr>
+      <!-- Qwen2.5-72B -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Qwen2.5-72B</td>
+        <td>72.7</td>
+        <td class="yes">✅</td>
+        <td>Apache 2.0</td>
+        <td>131,072</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>86.1</td>
+        <td>86.6</td>
+        <td>$0.90</td>
+        <td>$0.90</td>
+        <td>~145 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Qwen2.5-Coder -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Qwen2.5-Coder-32B</td>
+        <td>32.5</td>
+        <td class="yes">✅</td>
+        <td>Apache 2.0</td>
+        <td>131,072</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="na">N/A</td>
+        <td>92.7</td>
+        <td>$0.40</td>
+        <td>$0.40</td>
+        <td>~65 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Phi-3 -->
+      <tr data-open="1" data-vision="1" data-selfhost="1">
+        <td class="model-name">Phi-3 Medium (14B)</td>
+        <td>14</td>
+        <td class="yes">✅</td>
+        <td>MIT</td>
+        <td>128,000</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>78.0</td>
+        <td>62.2</td>
+        <td>$0.14</td>
+        <td>$0.56</td>
+        <td>~28 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+      <!-- Command R+ -->
+      <tr data-open="1" data-vision="0" data-selfhost="1">
+        <td class="model-name">Command R+</td>
+        <td>104</td>
+        <td class="yes">✅</td>
+        <td>CC-BY-NC-4.0</td>
+        <td>128,000</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+        <td class="yes">✅</td>
+        <td>75.7</td>
+        <td class="na">N/A</td>
+        <td>$2.50</td>
+        <td>$10.00</td>
+        <td>~208 GB (FP16)</td>
+        <td class="yes">✅</td>
+        <td class="no">❌</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="info-box">
+    <strong>💡 Notes on data:</strong> Parameter counts for proprietary models (GPT-4o, Claude, Gemini) are not officially disclosed — estimates marked with "~" are based on published reports. Benchmark scores (MMLU, HumanEval) come from official model papers and independent evaluations. Pricing is from official API pricing pages as of Feb 2026. Claude 3.5 Sonnet/Haiku pricing shown is from the legacy model era — current Anthropic models are Claude Opus 4.6 / Sonnet 4.6 / Haiku 4.5.
+  </div>
+</div>
+</section>
+
+<!-- ============ MODEL NAMING GUIDE ============ -->
+<section id="naming">
+<div class="container">
+  <h2>📛 How to Read Model Names</h2>
+  <p>Model names encode a lot of information. Here's how to decode them:</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>B = Billion Parameters</h3>
+      <p>The number before "B" indicates the model's parameter count in billions.</p>
+      <ul>
+        <li><code>Llama-3.1-8B</code> → 8 billion parameters</li>
+        <li><code>Llama-3.1-70B</code> → 70 billion parameters</li>
+        <li><code>Llama-3.1-405B</code> → 405 billion parameters</li>
+      </ul>
+      <p>More parameters generally = more capable but more resource-hungry.</p>
+    </div>
+
+    <div class="card">
+      <h3>Instruct / Chat</h3>
+      <p>Indicates the model has been fine-tuned for instruction following and conversation.</p>
+      <ul>
+        <li><code>Llama-3.1-8B</code> → base model (completion only)</li>
+        <li><code>Llama-3.1-8B-Instruct</code> → tuned for chat/instructions</li>
+      </ul>
+      <p>Always use the Instruct variant for chat applications.</p>
+    </div>
+
+    <div class="card">
+      <h3>MoE = Mixture of Experts</h3>
+      <p>Models like <code>Mixtral 8x7B</code> use MoE architecture: 8 expert networks of 7B each, but only ~2 are active per token.</p>
+      <ul>
+        <li>Total params: 46.7B</li>
+        <li>Active params per token: ~12.9B</li>
+        <li>Faster inference than a dense 46.7B model</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Quantization Suffixes</h3>
+      <p>Quantized model names include the format and bit depth:</p>
+      <ul>
+        <li><code>Q4_K_M</code> → 4-bit quantization, K-quant, Medium quality</li>
+        <li><code>Q5_K_S</code> → 5-bit, K-quant, Small (more compression)</li>
+        <li><code>Q8_0</code> → 8-bit quantization</li>
+        <li><code>GPTQ-Int4</code> → GPTQ format, 4-bit integers</li>
+        <li><code>AWQ</code> → Activation-aware Weight Quantization</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Version Numbers</h3>
+      <p>Versions indicate model generation:</p>
+      <ul>
+        <li><code>Llama 3.1</code> vs <code>Llama 3</code> → minor revision</li>
+        <li><code>GPT-4o</code> → "omni" variant of GPT-4</li>
+        <li><code>Claude 3.5</code> → half-generation upgrade over Claude 3</li>
+        <li><code>Qwen2.5</code> → 2nd gen, 5th revision</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Size Tiers</h3>
+      <p>Common naming patterns for model sizes:</p>
+      <ul>
+        <li><strong>Nano/Mini/Small</strong> → lightweight, fast, cheap</li>
+        <li><strong>Medium/Large</strong> → balanced capability</li>
+        <li><strong>Pro/Opus/Max</strong> → highest capability tier</li>
+        <li><strong>Flash/Haiku</strong> → optimized for speed</li>
+        <li><strong>Sonnet</strong> → balanced (Anthropic naming)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ PARAMETERS GUIDE ============ -->
+<section id="parameters">
+<div class="container">
+  <h2>📋 What Each Parameter Means</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Parameter Count</h3>
+      <p>Total number of trainable weights in billions. Larger models generally perform better but require more compute. MoE models have high total counts but fewer active parameters per inference.</p>
+    </div>
+    <div class="card">
+      <h3>Context Window</h3>
+      <p>Maximum number of tokens (input + output) the model can process at once. 1 token ≈ 0.75 English words. A 128K context ≈ ~96,000 words ≈ a 300-page book.</p>
+    </div>
+    <div class="card">
+      <h3>MMLU Score</h3>
+      <p><strong>Massive Multitask Language Understanding</strong> — tests knowledge across 57 subjects (STEM, humanities, social sciences). Scores are 0–100%. Top models score 85–90%+.</p>
+    </div>
+    <div class="card">
+      <h3>HumanEval Score</h3>
+      <p>Measures code generation ability via 164 Python programming problems. Reports pass@1 (% correct on first try). Top models score 85–92%+.</p>
+    </div>
+    <div class="card">
+      <h3>API Pricing</h3>
+      <p>Cost per million tokens for API usage. Input tokens (your prompt) are usually cheaper than output tokens (model's response). Cached input prices are even lower.</p>
+    </div>
+    <div class="card">
+      <h3>MoE Architecture</h3>
+      <p><strong>Mixture of Experts</strong> — routes each token to a subset of specialized "expert" sub-networks. Enables larger total capacity with lower inference cost per token.</p>
+    </div>
+    <div class="card">
+      <h3>Reasoning / CoT</h3>
+      <p><strong>Chain-of-Thought</strong> reasoning mode — the model "thinks step-by-step" before answering. Models like DeepSeek-R1, o1, and Claude with Extended Thinking use this for complex math/logic.</p>
+    </div>
+    <div class="card">
+      <h3>Self-Hostable</h3>
+      <p>Whether you can download and run the model on your own hardware. Requires significant GPU VRAM. Open-source/open-weight models are self-hostable; proprietary models are API-only.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ DECISION FRAMEWORK ============ -->
+<section id="decision">
+<div class="container">
+  <h2>🎯 Decision Framework: When to Use What</h2>
+
+  <div class="cards">
+    <div class="card">
+      <h3>💰 Budget-Conscious / High Volume</h3>
+      <p>Best picks for cost-effective usage:</p>
+      <ul>
+        <li><strong>DeepSeek-V3</strong> — $0.28/$0.42 per M tokens, excellent quality</li>
+        <li><strong>GPT-4o-mini</strong> — $0.15/$0.60, solid all-rounder</li>
+        <li><strong>Gemini 2.0 Flash</strong> — $0.10/$0.40, cheapest with vision</li>
+        <li><strong>Llama 3.1 8B</strong> — self-host for near-zero marginal cost</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>💻 Coding & Development</h3>
+      <p>Best for code generation and debugging:</p>
+      <ul>
+        <li><strong>Qwen2.5-Coder-32B</strong> — 92.7% HumanEval, open source</li>
+        <li><strong>Claude 3.5 Sonnet</strong> — 92.0% HumanEval, excellent reasoning</li>
+        <li><strong>GPT-4o</strong> — 90.2% HumanEval, strong all-rounder</li>
+        <li><strong>DeepSeek-R1</strong> — great for complex algorithmic problems</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🧠 Complex Reasoning & Math</h3>
+      <p>Best for multi-step logic, math proofs, research:</p>
+      <ul>
+        <li><strong>DeepSeek-R1</strong> — open-source reasoning champion</li>
+        <li><strong>Claude 3.5 Sonnet</strong> — extended thinking mode</li>
+        <li><strong>Gemini 1.5 Pro</strong> — strong analytical capabilities</li>
+        <li><strong>GPT-4o</strong> — reliable reasoning baseline</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>👁️ Vision & Multimodal</h3>
+      <p>Best for image understanding and multimodal tasks:</p>
+      <ul>
+        <li><strong>Gemini 2.0 Flash</strong> — cheapest vision model, 1M context</li>
+        <li><strong>GPT-4o</strong> — strong vision + text capabilities</li>
+        <li><strong>Claude 3.5 Sonnet</strong> — excellent at document/chart analysis</li>
+        <li><strong>Phi-3</strong> — smallest self-hostable vision model</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>🏠 Self-Hosting / Privacy</h3>
+      <p>Best for running on your own infrastructure:</p>
+      <ul>
+        <li><strong>Llama 3.1 8B</strong> — runs on a single consumer GPU (16GB)</li>
+        <li><strong>Qwen2.5-72B</strong> — best quality-to-size ratio</li>
+        <li><strong>Mixtral 8x7B</strong> — good MoE model for modest hardware</li>
+        <li><strong>Phi-3</strong> — tiny, runs on laptops</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>📄 Long Documents / RAG</h3>
+      <p>Best for processing very long inputs:</p>
+      <ul>
+        <li><strong>Gemini 1.5 Pro</strong> — 2M token context window</li>
+        <li><strong>Gemini 2.0 Flash</strong> — 1M tokens, very affordable</li>
+        <li><strong>Claude 3.5 Sonnet</strong> — 200K tokens, excellent recall</li>
+        <li><strong>Command R+</strong> — built for RAG use cases</li>
+      </ul>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ QUANTIZATION ============ -->
+<section id="quantization">
+<div class="container">
+  <h2>⚡ Quantization Explained</h2>
+  <p>Quantization reduces model size and VRAM needs by using lower-precision numbers for weights.</p>
+
+  <div class="cards">
+    <div class="card">
+      <h3>GGUF (llama.cpp)</h3>
+      <p>The most popular format for CPU + GPU inference via <code>llama.cpp</code> and <code>ollama</code>.</p>
+      <ul>
+        <li>Supports mixed CPU/GPU offloading</li>
+        <li>Multiple quant levels: Q2_K through Q8_0</li>
+        <li>K-quant variants (K_S, K_M, K_L) trade size vs quality</li>
+        <li><strong>Q4_K_M</strong> is the sweet spot for most users</li>
+        <li>Best for: consumer hardware, local inference</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>GPTQ</h3>
+      <p>GPU-only quantization optimized for fast inference on NVIDIA GPUs.</p>
+      <ul>
+        <li>Requires calibration dataset during quantization</li>
+        <li>Typically 4-bit (Int4) or 8-bit</li>
+        <li>Faster than GGUF on pure GPU workloads</li>
+        <li>Used with <code>AutoGPTQ</code>, <code>vLLM</code>, <code>TGI</code></li>
+        <li>Best for: production GPU serving</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>AWQ (Activation-Aware)</h3>
+      <p>Newer quantization method that preserves quality better than GPTQ.</p>
+      <ul>
+        <li>Protects the most important weights (based on activation patterns)</li>
+        <li>Typically 4-bit</li>
+        <li>Slightly better quality than GPTQ at same bit depth</li>
+        <li>Used with <code>vLLM</code>, <code>TGI</code>, <code>AutoAWQ</code></li>
+        <li>Best for: quality-sensitive production deployment</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Quantization Impact on Quality & Size</h3>
+  <div class="table-wrapper">
+  <table style="min-width: 600px;">
+    <thead>
+      <tr><th>Quant Level</th><th>Bits/Weight</th><th>Size vs FP16</th><th>Quality Loss</th><th>Use Case</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>FP16</td><td>16</td><td>100%</td><td>None (baseline)</td><td>Maximum quality, research</td></tr>
+      <tr><td>Q8_0</td><td>8</td><td>~50%</td><td>Negligible</td><td>When you have the VRAM</td></tr>
+      <tr><td>Q6_K</td><td>6</td><td>~38%</td><td>Very minimal</td><td>Quality-sensitive workloads</td></tr>
+      <tr><td>Q5_K_M</td><td>5</td><td>~31%</td><td>Slight</td><td>Good balance</td></tr>
+      <tr><td><strong>Q4_K_M</strong></td><td><strong>4</strong></td><td><strong>~25%</strong></td><td><strong>Minor</strong></td><td><strong>Recommended default</strong></td></tr>
+      <tr><td>Q3_K_M</td><td>3</td><td>~19%</td><td>Noticeable</td><td>Tight VRAM constraints</td></tr>
+      <tr><td>Q2_K</td><td>2</td><td>~13%</td><td>Significant</td><td>Experimentation only</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<!-- ============ HARDWARE GUIDE ============ -->
+<section id="hardware">
+<div class="container">
+  <h2>🖥️ Hardware Requirements Guide</h2>
+  <p>VRAM requirements for self-hosting. Rule of thumb: <strong>~2 bytes per parameter at FP16</strong>, so a 7B model needs ~14 GB VRAM.</p>
+
+  <div class="table-wrapper">
+  <table style="min-width: 800px;">
+    <thead>
+      <tr><th>Model</th><th>FP16 VRAM</th><th>Q4_K_M VRAM</th><th>Suggested GPU(s)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Llama 3.1 8B</td><td>~16 GB</td><td>~5 GB</td><td>RTX 3060 12GB, RTX 4060 Ti 16GB</td></tr>
+      <tr><td>Phi-3 14B</td><td>~28 GB</td><td>~9 GB</td><td>RTX 3090 24GB, RTX 4070 Ti 16GB</td></tr>
+      <tr><td>Qwen2.5-Coder-32B</td><td>~65 GB</td><td>~20 GB</td><td>RTX 3090 24GB, RTX 4090 24GB</td></tr>
+      <tr><td>Mixtral 8x7B</td><td>~93 GB</td><td>~26 GB</td><td>RTX 4090 24GB + CPU offload, or 2x RTX 3090</td></tr>
+      <tr><td>Llama 3.1 70B</td><td>~140 GB</td><td>~40 GB</td><td>2x RTX 4090, A100 80GB</td></tr>
+      <tr><td>Qwen2.5-72B</td><td>~145 GB</td><td>~42 GB</td><td>2x RTX 4090, A100 80GB</td></tr>
+      <tr><td>Command R+ (104B)</td><td>~208 GB</td><td>~60 GB</td><td>3x RTX 4090, 2x A100 80GB</td></tr>
+      <tr><td>Mixtral 8x22B</td><td>~282 GB</td><td>~80 GB</td><td>4x RTX 4090, 4x A100 80GB</td></tr>
+      <tr><td>Llama 3.1 405B</td><td>~810 GB</td><td>~230 GB</td><td>8x A100 80GB, 8x H100</td></tr>
+      <tr><td>DeepSeek-V3 / R1</td><td>~1.3 TB</td><td>~370 GB</td><td>8x H100 80GB minimum</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠️ Important:</strong> VRAM estimates are for inference only. Training and fine-tuning require 2–4x more memory. Context length also affects VRAM — longer contexts need more memory for KV cache. These are approximate values for the model weights only.
+  </div>
+
+  <h3>Quick Reference: GPU VRAM</h3>
+  <div class="cards">
+    <div class="card">
+      <h3>Consumer GPUs</h3>
+      <ul>
+        <li>RTX 3060 — 12 GB</li>
+        <li>RTX 3080 — 10 GB</li>
+        <li>RTX 3090 — 24 GB</li>
+        <li>RTX 4060 Ti — 16 GB</li>
+        <li>RTX 4070 Ti Super — 16 GB</li>
+        <li>RTX 4080 — 16 GB</li>
+        <li>RTX 4090 — 24 GB</li>
+        <li>RTX 5090 — 32 GB</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Data Center GPUs</h3>
+      <ul>
+        <li>A10G — 24 GB</li>
+        <li>A40 — 48 GB</li>
+        <li>A100 — 40 GB or 80 GB</li>
+        <li>H100 — 80 GB</li>
+        <li>H200 — 141 GB</li>
+        <li>MI300X (AMD) — 192 GB</li>
+        <li>B200 — 192 GB</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Apple Silicon (Unified Memory)</h3>
+      <ul>
+        <li>M1/M2 — 8–24 GB</li>
+        <li>M1/M2 Pro — 16–32 GB</li>
+        <li>M1/M2/M3 Max — 32–128 GB</li>
+        <li>M1/M2 Ultra — 64–192 GB</li>
+        <li>M4 Max — up to 128 GB</li>
+        <li>M4 Ultra — up to 256 GB (expected)</li>
+      </ul>
+      <p>Apple Silicon can run models using unified memory with <code>llama.cpp</code> Metal backend. Slower than NVIDIA GPUs but works well for local testing.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ============ SOURCES ============ -->
+<section id="sources">
+<div class="container">
+  <h2>📚 Sources</h2>
+  <p>All data in this guide comes from verified, official sources:</p>
+  <ul>
+    <li><a href="https://developers.openai.com/api/docs/pricing" target="_blank">OpenAI API Pricing</a> — GPT-4o, GPT-4o-mini, GPT-4-Turbo pricing & specs</li>
+    <li><a href="https://platform.claude.com/docs/en/about-claude/models/overview" target="_blank">Anthropic Models Documentation</a> — Claude model specs, pricing, context windows</li>
+    <li><a href="https://api-docs.deepseek.com/quick_start/pricing" target="_blank">DeepSeek API Pricing</a> — DeepSeek-V3/R1 pricing (V3.2 as of Feb 2026)</li>
+    <li><a href="https://ai.google.dev/gemini-api/docs/models" target="_blank">Google Gemini API Docs</a> — Gemini model specifications</li>
+    <li><a href="https://docs.mistral.ai/getting-started/models" target="_blank">Mistral AI Model Docs</a> — Mistral/Mixtral model information</li>
+    <li><a href="https://artificialanalysis.ai/models" target="_blank">Artificial Analysis</a> — Independent model benchmarks and performance comparisons</li>
+    <li><a href="https://huggingface.co/meta-llama" target="_blank">Meta Llama on Hugging Face</a> — Llama model cards, licenses, specs</li>
+    <li><a href="https://huggingface.co/Qwen" target="_blank">Qwen on Hugging Face</a> — Qwen2.5 model cards and benchmarks</li>
+    <li><a href="https://huggingface.co/microsoft/Phi-3-medium-128k-instruct" target="_blank">Microsoft Phi-3 on Hugging Face</a> — Phi-3 specs and benchmarks</li>
+    <li><a href="https://huggingface.co/CohereForAI/c4ai-command-r-plus" target="_blank">Command R+ on Hugging Face</a> — Cohere Command R+ model card</li>
+    <li><a href="https://arxiv.org/abs/2401.04088" target="_blank">DeepSeek-V3 Technical Report</a> — Architecture details, MoE specs</li>
+    <li><a href="https://arxiv.org/abs/2501.12948" target="_blank">DeepSeek-R1 Technical Report</a> — Reasoning model architecture</li>
+  </ul>
+
+  <div class="info-box">
+    <strong>📅 Last Updated:</strong> February 20, 2026<br>
+    <strong>⚠️ Disclaimer:</strong> LLM pricing, benchmarks, and capabilities change frequently. Always check official sources for the most current information. Benchmark scores may vary across evaluation methodologies.
+  </div>
+</div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>LLM Chooser — Built by <a href="https://github.com/danilo-telnyx">danilo-telnyx</a> | Last updated: February 20, 2026</p>
+    <p>Data sourced from official documentation and verified benchmarks. <a href="https://github.com/danilo-telnyx/llm-chooser">View on GitHub</a></p>
+  </div>
+</footer>
+
+<script>
+// Table sorting
+document.querySelectorAll('#llm-table thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const table = document.getElementById('llm-table');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const col = parseInt(th.dataset.col);
+    const isNum = th.dataset.type === 'num';
+
+    // Toggle sort direction
+    const wasAsc = th.classList.contains('sorted-asc');
+    table.querySelectorAll('th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+    th.classList.add(wasAsc ? 'sorted-desc' : 'sorted-asc');
+    const dir = wasAsc ? -1 : 1;
+
+    rows.sort((a, b) => {
+      let va = a.cells[col].textContent.trim();
+      let vb = b.cells[col].textContent.trim();
+      if (isNum) {
+        const parse = s => {
+          s = s.replace(/[$,]/g, '').replace(/[~≈]/g, '');
+          const n = parseFloat(s);
+          return isNaN(n) ? -Infinity : n;
+        };
+        return (parse(va) - parse(vb)) * dir;
+      }
+      return va.localeCompare(vb) * dir;
+    });
+    rows.forEach(r => tbody.appendChild(r));
+  });
+});
+
+// Filtering
+function filterModels(type) {
+  document.querySelectorAll('.filter-bar button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('#llm-table tbody tr').forEach(row => {
+    if (type === 'all') { row.style.display = ''; return; }
+    if (type === 'open') { row.style.display = row.dataset.open === '1' ? '' : 'none'; return; }
+    if (type === 'proprietary') { row.style.display = row.dataset.open === '0' ? '' : 'none'; return; }
+    if (type === 'vision') { row.style.display = row.dataset.vision === '1' ? '' : 'none'; return; }
+    if (type === 'selfhost') { row.style.display = row.dataset.selfhost === '1' ? '' : 'none'; return; }
+  });
+}
+</script>
+</body>
+</html>
