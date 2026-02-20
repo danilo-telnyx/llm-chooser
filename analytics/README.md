@@ -41,7 +41,7 @@ Features:
    npx wrangler secret put ADMIN_PASSWORD       # choose a strong password
    npx wrangler secret put TELEGRAM_BOT_TOKEN   # your Telegram bot token
    npx wrangler secret put JWT_SECRET           # any random string
-   npx wrangler secret put TELEGRAM_CHAT_ID     # 1023351889
+   npx wrangler secret put TELEGRAM_CHAT_ID     # your Telegram chat ID
    ```
 
 8. **Deploy:**

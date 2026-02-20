@@ -102,7 +102,7 @@ async function handleLogin(request, env) {
   await env.DB.prepare('INSERT INTO auth_codes (code, created_at) VALUES (?, ?)').bind(code, new Date().toISOString()).run();
 
   // Send via Telegram
-  const chatId = env.TELEGRAM_CHAT_ID || '1023351889';
+  const chatId = env.TELEGRAM_CHAT_ID;
   await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
