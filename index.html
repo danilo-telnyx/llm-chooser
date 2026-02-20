@@ -1650,5 +1650,28 @@ function filterModels(type) {
   });
 }
 </script>
+
+<!-- Analytics beacon (Cloudflare Workers) -->
+<script>
+(function(){
+  var ANALYTICS_URL = 'https://llm-chooser-analytics.CHANGE-ME.workers.dev';
+  if (ANALYTICS_URL.includes('CHANGE-ME')) return;
+  var data = {
+    path: location.pathname,
+    referrer: document.referrer || null,
+    user_agent: navigator.userAgent,
+    language: navigator.language,
+    screen_width: screen.width,
+    screen_height: screen.height,
+    session_id: sessionStorage.getItem('_sid') || (sessionStorage.setItem('_sid', Math.random().toString(36).substr(2)), sessionStorage.getItem('_sid'))
+  };
+  fetch(ANALYTICS_URL + '/track', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+    mode: 'cors'
+  }).catch(function(){});
+})();
+</script>
 </body>
 </html>
