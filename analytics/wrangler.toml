@@ -5,4 +5,4 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "llm-analytics"
-database_id = "TO_BE_CREATED"
+database_id = "99fc012b-09f0-45ba-a7d2-1498bd17ce6f"
