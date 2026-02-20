@@ -1376,5 +1376,16 @@ function filterModels(type) {
   });
 }
 </script>
+<!-- Analytics Beacon -->
+<script>
+(function(){
+  var ANALYTICS_URL = 'http://localhost:3847'; // TODO: Replace with production URL
+  try {
+    var d = {url:location.href, referrer:document.referrer, sw:screen.width, sh:screen.height, lang:navigator.language};
+    navigator.sendBeacon ? navigator.sendBeacon(ANALYTICS_URL+'/api/track', new Blob([JSON.stringify(d)],{type:'application/json'}))
+      : fetch(ANALYTICS_URL+'/api/track',{method:'POST',body:JSON.stringify(d),headers:{'Content-Type':'application/json'},keepalive:true});
+  } catch(e){}
+})();
+</script>
 </body>
 </html>
